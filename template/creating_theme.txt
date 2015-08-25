@@ -1,0 +1,9 @@
+Creating theme guide is on Github here: http://github.com/pospile/scms
+
+In short:
+
+	1. Create folder with name of your plugin.
+	2. Create config.json with details about plugin inside.
+	3. Create standard HTML (CSS, JS included) page and place SCMS tags like {{users.author}} -- insert creator of blog name in place of the tags.
+	4. To switch the theme go to: http://your-domain-or-ip-adress.domain/admin/templates
+	5. To find new themes please visit: http://not-yet-established-marketplace.xyz/templates

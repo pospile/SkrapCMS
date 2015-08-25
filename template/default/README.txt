@@ -1,0 +1,3 @@
+A Pen created at CodePen.io. You can find this one at http://codepen.io/dmdez/pen/EaxKVr.
+
+ Came across <a href="https://blog.heroku.com/">Heroku's blog</a> and liked the simple layout and the use of white space on larger screens.  But to add to it, <a href="http://www.roblafeve.com">Rob LaFeve</a> had a great idea of making the article header "sticky" when scrolling through the article to keep context of the blog along the way.

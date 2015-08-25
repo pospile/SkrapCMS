@@ -1,0 +1,25 @@
+{
+
+
+	"unchanged_settings": false,
+
+
+	"domain": "pospile.xyz",
+
+
+	"port": 80,
+
+
+	"salt": "your-super-secret-salt-for-passwords-here",
+
+
+	"require_verification_email": false,
+
+
+	"theme_name": "Default News Paper Theme",
+
+
+	"theme_path": "template/default"
+
+
+}
