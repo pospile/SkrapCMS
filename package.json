@@ -1,6 +1,6 @@
 {
   "name": "scms",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Simple Content Management System for blogs and etc...",
   "main": "app.js",
   "scripts": {

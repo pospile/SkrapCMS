@@ -1,0 +1,9 @@
+{
+  "static_files": ["/css", "/js", "/public"],
+
+
+  "theme_index": "index.html",
+
+
+  "theme_404": "404.html"
+}
