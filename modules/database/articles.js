@@ -5,10 +5,20 @@ var user = require("./users.js");
 db.run("CREATE TABLE if not exists `article` (`id`INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,`name`TEXT UNIQUE,`data`TEXT,`date`TEXT, `author`INTEGER)");
 
 exports.GetArticle = function (id, callback) {
-	db.get('SELECT * FROM article WHERE id="0"', function (err, row) {
-		user.GetUserById(row.id, function(name){
-			var article = {"article": {"id": row.id, "name": row.name, "date": row.date, "author": name, "author_id": row.author, "content": row.data}};
-			callback(err, article);
-		});
+	db.get('SELECT * FROM article WHERE id="'+ id +'"', function (err, row) {
+		if (row == undefined)
+		{
+			console.log(err);
+			var article = {"article": {"id": 'null', "name": 'null', "date": 'null', "author": 'null', "author_id": 'null', "content": 'null'}};
+			callback("404", article);
+		}
+		else
+		{
+			user.GetUserById(row.author, function(name){
+				var article = {"article": {"id": row.id, "name": row.name, "date": row.date, "author": name.name, "author_id": row.author, "content": row.data}};
+				console.log(row.name);
+				callback(err, article);
+			});
+		}
 	});
 };

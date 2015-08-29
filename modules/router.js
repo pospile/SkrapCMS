@@ -5,14 +5,14 @@ var template = require("./template.js");
 var database = require("./database.js");
 var log = require("./log.js");
 var colors = require('colors');
+var modules = require("./modules.js");
 
-exports.initialize = function () {
-	Start();
-	
+exports.initialize = function (param) {
+	Start(param);
 };
 
 
-function Start ()
+function Start (param)
 {
 	var app = express();
 	
@@ -26,12 +26,15 @@ function Start ()
 	var theme_settings = require("../" + config.templatePath + "/config.json");
 	theme_settings = theme_settings.static_files;
 
-
 	theme_settings.forEach(function(path){
-		console.log("Using: " + config.templatePath + path + " as static service.");
+		if (param == "test" || param == "using")
+		{
+			console.log("  Using: " + colors.yellow(config.templatePath + path) + " as static service.");
+		}
 		app.use(express.static(config.templatePath + path));
 	});
 
+	console.log("\n");
 
 	app.use(function (req, res, next) {
 		res.header("Access-Control-Allow-Origin", "*");
@@ -44,11 +47,15 @@ function Start ()
 
 
 	var server = app.listen(port, function () {
-		console.log('DONE: SCMS is running at http://localhost:%s'.green, port);
-		console.log("Access to these files is limited: " + colors.red(config.disallowed_files));
-		database.BlogName(function (name) {
-			console.log("Blog name: " + name);
-		});
+		console.log('  DONE: Skrap is running at http://localhost:'.magenta + colors.green(port));
+
+
+		if (param == "test" || param == "files")
+		{
+			console.log("  Access to these files is limited: " + colors.red(config.disallowed_files));
+			console.log("  These modules are installed: " + colors.gray("skrap_core/" + modules.modules));
+			console.log("  Modules will not be used on these pages: " + colors.yellow(config.disallowed_modules));
+		}
 	});
 
 
@@ -60,8 +67,14 @@ function Start ()
 		});
 	});
 	app.get('/article/:number', function (req, res) {
-		template.ReturnPage(config.templatePath + "/article.html", {"type": "article", "id": req.params.number}, function (err, data) {
+		template.ReturnPage(config.templatePath + "/" + config.theme_article, {"type": "article", "id": req.params.number}, function (err, data) {
 			console.log("Requested article: " + req.params.number);
+			res.send(data);
+		});
+	});
+	app.get('/user/:number', function (req, res) {
+		template.ReturnPage(config.templatePath + "/" + config.theme_user, {"type": "user", "id": req.params.number}, function (err, data) {
+			console.log("Requested user account: " + req.params.number);
 			res.send(data);
 		});
 	});
@@ -78,9 +91,13 @@ function Start ()
 			template.ReturnStaticPage(config.templatePath + "/" + req.params.path + ".html", function (err, data) {
 				if(err)
 				{
-					console.log(err);
+					console.log("404: " + err.code);
+					res.status(404).send(data);
 				}
-				res.send(data);
+				else
+				{
+					res.send(data);
+				}
 			});
 		}
 		else

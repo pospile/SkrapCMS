@@ -34,7 +34,8 @@ exports.VerifyUser = function (username, password, salt, callback) {
 
 exports.GetUserById = function (id, callback){
 	db.get("SELECT * from user_info WHERE id='" + id + "'", function (err, row) {
-		callback(row.name);
+		var build = {"id": row.id, "name": row.name, "rights": row.rights};
+		callback(build);
 	});
 };
 

@@ -1,35 +1,37 @@
 {
   "name": "scms",
-  "version": "0.1.0",
-  "description": "Simple Content Management System for blogs and etc...",
-  "main": "app.js",
-  "scripts": {
-    "test": "node bin test"
-  },
-  "repository": {
-  "type": "git",
-  "url": "git://github.com/pospile/scms.git"
-},
-  "keywords": [
-    "Simple",
-    "content",
-    "management",
-    "system",
-    "for",
-    "blog",
-    "easy",
-    "to",
-    "use",
-    "email",
-    "blogging"
-  ],
-  "author": "Vojtech Pospichal",
-  "license": "GPL2",
-  "dependencies": {
-    "body-parser": "",
-    "colors": "",
-    "express": "",
-    "handlebars": "",
-    "sqlite3": ""
+      "version": "0.1.2",
+      "description": "Simple Content Management System for blogs and etc...",
+      "main": "app.js",
+      "scripts": {
+        "test": "node bin test"
+      },
+      "repository": {
+        "type": "git",
+        "url": "git://github.com/pospile/SkrapCMS.git"
+      },
+      "keywords": [
+        "Simple",
+        "content",
+        "management",
+        "system",
+        "for",
+        "blog",
+        "easy",
+        "to",
+        "use",
+        "email",
+        "blogging"
+      ],
+      "author": "Vojtech Pospichal",
+      "license": "GPL2",
+      "dependencies": {
+        "body-parser": "",
+        "cheerio": "",
+        "colors": "",
+        "express": "",
+        "handlebars": "",
+        "html-minifier": "",
+        "sqlite3": ""
   }
 }

@@ -1,3 +1,15 @@
 {
-  "static_files": ["/css"]
+  "static_files": ["/css", "/public"],
+
+
+  "theme_index": "index.html",
+
+
+  "theme_404": "404.html",
+
+
+  "theme_article": "article.html",
+
+
+  "theme_user": "user.html"
 }

@@ -1,1 +1,1 @@
-ADMIN theme is required for scms to work. This is the default administration of your blog (system).
+ADMIN theme is required for skrap to work. This is the default administration of your blog (system).

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html >
+
+	<head>
+		<meta charset="UTF-8">
+		<title>{{article.name}}</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!--<meta http-equiv="refresh" content="5; URL=#">-->
+
+		<link rel="stylesheet" href="/article.css" />
+	</head>
+
+	<body>
+		<header>
+			<div class="bars">
+				<ul>
+					<li class="cor-1"></li>
+					<li class="cor-2"></li>
+					<li class="cor-3"></li>
+					<li class="cor-4"></li>
+					<li class="cor-5"></li>
+				</ul>
+			</div>
+			<div class="header-title">
+				<b>{{article.name}}</b>
+			</div>
+		</header>
+		<section class="content-block">
+			{{{article.content}}}
+		</section>
+
+		<footer>
+			Created by: <a href="/users/{{article.author_id}}">{{article.author}}</a> on: <b>{{article.date}}</b>.
+		</footer>
+	</body>
+
+</html>

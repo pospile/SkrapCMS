@@ -9,8 +9,13 @@ exports.isDefault = config.unchanged_settings;
 exports.templatePath = config.theme_path;
 exports.theme_index = theme_config.theme_index;
 exports.theme_404 = theme_config.theme_404;
+exports.theme_article = theme_config.theme_article;
+exports.theme_user = theme_config.theme_user;
 exports.log = config.log_path;
+exports.optimize = config.optimize_site;
+
 exports.disallowed_files = files.no_access;
+exports.disallowed_modules = files.no_modules;
 
 
 

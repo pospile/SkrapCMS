@@ -22,13 +22,15 @@ if (param == "repair")
 
 if (param == "test")
 {
-	console.log("\n\n")
+	console.log("\n")
 	console.log("  Testing enviroment... ".yellow);
 	console.log("  Is this default settings: " + colors.green(config.isDefault));
 	console.log("  Salt: " + colors.green(config.ReturnSalt));
 	console.log("  Require mail verification: " + colors.green(config.ReturnVerification));
 	console.log("  Running on port: " + colors.green(config.port));
-	console.log("  Using template at: " + colors.green(config.templatePath)+ "\n\n");
+	console.log("  Using template at: " + colors.green(config.templatePath));
+
+	console.log("  Returning optimalized site: " + colors.green(config.optimize)+ "\n\n");
 
 
 	/*
@@ -53,7 +55,7 @@ if (config.isDefault)
 }
 else
 {
-	router.initialize();
+	router.initialize(process.argv[2]);
 }
 
 

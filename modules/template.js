@@ -14,18 +14,23 @@ var ReturnPage = function(page, options, callback) {
 	file.ReadStaticFile(page, function (err, data) {
 		//log.write("Page readen: " + data);
 		var template = Handlebars.compile(data);
-		BuildArticle(template, options, callback);
+		BuildFromData(template, options, callback);
 	});
 };
 
 
-var BuildArticle = function (page, options, callback) {
+var BuildFromData = function (page, options, callback) {
+	console.log(options);
 	if (options.type == "article")
 	{
+
 		article.GetArticle(options.id, function(err, data){
-			if (err)
+			if (err == "404")
 			{
 				console.log(err);
+				ReturnStaticPage(config.templatePath + "/" + config.theme_404, function(err, data){
+					callback("404", data);
+				});
 			}
 			else
 			{
@@ -36,11 +41,15 @@ var BuildArticle = function (page, options, callback) {
 			}
 		});
 	}
+	else if (options.type == "user")
+	{
+
+	}
 };
 
 exports.ReturnPage = function (page, options, callback) {
 	console.log("Article id: " + options.id);
-	if (options.id = undefined)
+	if (options.id == undefined)
 	{
 		ReturnStaticPage(config.templatePath + "/" + config.theme_404, callback);
 	}

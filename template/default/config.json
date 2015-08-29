@@ -5,5 +5,8 @@
   "theme_index": "index.html",
 
 
-  "theme_404": "404.html"
+  "theme_404": "404.html",
+
+
+  "theme_article": "article.html"
 }
