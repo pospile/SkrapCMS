@@ -1,0 +1,18 @@
+{
+  "static_files": ["/css", "/fonts"],
+
+
+  "static_images": ["/images"],
+
+
+  "theme_index": "index.html",
+
+
+  "theme_404": "404.html",
+
+
+  "theme_article": "article.html",
+
+
+  "theme_user": "user.html"
+}

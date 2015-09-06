@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" autoUpload="Always" serverName="raspi" uploadOnCheckin="7322a3ab-cda3-4f5f-8ceb-a54466b5fa40">
+    <serverData>
+      <paths name="raspi">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/cms" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/.idea" />
+            <excludedPath local="true" path="$PROJECT_DIR$/node_modules" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myUploadOnCheckinName" value="raspi" />
+    <option name="myAutoUpload" value="ALWAYS" />
+  </component>
+</project>

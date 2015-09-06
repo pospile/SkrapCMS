@@ -1,0 +1,30 @@
+{
+
+	"unchanged_settings": false,
+
+
+    "log_path": "./template/log",
+
+
+	"domain": "pospile.xyz",
+
+
+	"port": 80,
+
+
+	"salt": "your-super-secret-salt-for-passwords-here",
+
+
+	"require_verification_email": false,
+
+
+    "optimize_site": true,
+
+
+  	"optimize_image": true,
+
+
+	"theme_path": "template/default"
+
+
+}
