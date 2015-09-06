@@ -41,6 +41,13 @@ var BuildFromData = function (page, options, callback) {
 			}
 		});
 	}
+	else if (options.type == "index")
+	{
+		article.GetIndexArticles(config.index_article_limit, function(rows){
+			var result = page({article: rows});
+			callback(null, result);
+		});
+	}
 	else if (options.type == "user")
 	{
 

@@ -1,5 +1,8 @@
-Simple Content Management System
+Skrap Content Management system
 
-Run with node bin
+On linux server system must be run with:
+                                        *sudo* (sudo node bin.js)
 
-Then just go throught initial setup and prepare your new blog.
+Version: 0.1.5
+©Vojtìch Pospíchal
+

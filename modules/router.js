@@ -50,7 +50,7 @@ function Start (param)
 		console.log('  DONE: Skrap is running at http://localhost:'.magenta + colors.green(port));
 
 
-		if (param == "test" || param == "files")
+		if (param == "test" || param == "files" || param == "pages")
 		{
 			console.log("  Access to these files is limited: " + colors.red(config.disallowed_files));
 			console.log("  These modules are installed: " + colors.gray("skrap_core/" + modules.modules));
@@ -61,8 +61,8 @@ function Start (param)
 
 
 	app.get('/', function (req, res) {
-		template.ReturnStaticPage(config.templatePath + "/" + config.theme_index, function (err, data) {
-			console.log("Requested index directly");
+		template.ReturnPage(config.templatePath + "/" + config.theme_index, {"type": "index", "id": "index"}, function (err, data) {
+			console.log("Requeted index directly");
 			res.send(data);
 		});
 	});

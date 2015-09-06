@@ -82,7 +82,7 @@ var InsertModules = function (err, data, callback) {
 			removeOptionalTags: true
 		});
 
-		if (config.optimize)
+		if (config.optimize_site)
 		{
 			callback(err, data);
 		}

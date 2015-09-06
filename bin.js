@@ -13,11 +13,23 @@ var runWithTest = process.argv[3];
 
 if (param == "repair")
 {
-	//TODO: DO REPAIRING HERE (DELETED DATABASEs ETC...)
+	/*
+	TODO: DO REPAIRING HERE (DELETED DATABASEs ETC...)
+	*/
 	if (process.argv[3] != null)
 	{
 		database.SetBlogName(process.argv[3]);
 	}
+}
+
+
+if (param == "help" || param == "-h" || param == "h")
+{
+	console.log("List of parameters \n");
+	console.log("                  :"+ colors.red("test") +"  --> test enviroment");
+	console.log("                  :"+ colors.red("using") +" --> show static routes");
+	console.log("                  :"+ colors.red("files") +" --> show files");
+	return;
 }
 
 if (param == "test")
@@ -30,8 +42,8 @@ if (param == "test")
 	console.log("  Running on port: " + colors.green(config.port));
 	console.log("  Using template at: " + colors.green(config.templatePath));
 
-	console.log("  Returning optimalized site: " + colors.green(config.optimize)+ "\n\n");
-
+	console.log("  Returning optimalized site: " + colors.green(config.optimize_site)+ "\n\n");
+	console.log("  Returning optimalized images: " + colors.green(config.optimize_image)+ "\n\n");
 
 	/*
 

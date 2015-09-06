@@ -2,11 +2,20 @@
   "static_files": ["/css", "/js", "/public"],
 
 
+  "static_images": ["/images"],
+
+
   "theme_index": "index.html",
 
 
   "theme_404": "404.html",
 
 
-  "theme_article": "article.html"
+  "theme_article": "article.html",
+
+
+  "theme_user": "user.html",
+
+
+  "index_article_limit": 5
 }

@@ -2,7 +2,7 @@ var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('./database/article.db');
 var user = require("./users.js");
 
-db.run("CREATE TABLE if not exists `article` (`id`INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,`name`TEXT UNIQUE,`data`TEXT,`date`TEXT, `author`INTEGER)");
+db.run("CREATE TABLE if not exists `article` (`id`INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,`name`TEXT UNIQUE,`data`TEXT,`index_page` TEXT, `date`TEXT, `author`INTEGER, `author_name`TEXT)");
 
 exports.GetArticle = function (id, callback) {
 	db.get('SELECT * FROM article WHERE id="'+ id +'"', function (err, row) {
@@ -20,5 +20,11 @@ exports.GetArticle = function (id, callback) {
 				callback(err, article);
 			});
 		}
+	});
+};
+
+exports.GetIndexArticles = function (limit, callback){
+	db.all('SELECT * FROM article LIMIT ' + limit, function (err, rows) {
+		callback(rows);
 	});
 };

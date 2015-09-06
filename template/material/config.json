@@ -2,6 +2,9 @@
   "static_files": ["/css", "/public"],
 
 
+  "static_images": ["/images"],
+
+
   "theme_index": "index.html",
 
 
