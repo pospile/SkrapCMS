@@ -38,11 +38,11 @@ if (param == "test")
 	console.log("  Testing enviroment... ".yellow);
 	console.log("  Is this default settings: " + colors.green(config.isDefault));
 	console.log("  Salt: " + colors.green(config.ReturnSalt));
-	console.log("  Require mail verification: " + colors.green(config.ReturnVerification));
+	console.log("  Require mail verification: " + colors.green(config.RequireVerification));
 	console.log("  Running on port: " + colors.green(config.port));
 	console.log("  Using template at: " + colors.green(config.templatePath));
 
-	console.log("  Returning optimalized site: " + colors.green(config.optimize_site)+ "\n\n");
+	console.log("  Returning optimalized site: " + colors.green(config.optimize_site));
 	console.log("  Returning optimalized images: " + colors.green(config.optimize_image)+ "\n\n");
 
 	/*
@@ -51,6 +51,14 @@ if (param == "test")
 
 	*/
 
+	console.log("  Testing security module...".red);
+	console.log("  Input value:" + "testpassword1234".yellow);
+	require('./modules/security.js').Encrypt(("testpassword1234"), function (data) {
+		console.log("  Crypted hash: " + data);
+		require('./modules/security.js').Decrypt(data, function(hash){
+			console.log("  Decrypted hash:" + hash.green + "\n\n");
+		});
+	});
 
 	if (runWithTest != "true")
 	{

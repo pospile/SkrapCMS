@@ -1,7 +1,6 @@
 {
-  "modules": ["jquery", "bootstrap"],
+  "modules": ["jquery"],
   "urls": [
-    {"js_urls": ["https://code.jquery.com/jquery-2.1.4.min.js"], "css_urls": []},
-    {"js_urls": ["https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"], "css_urls": ["https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css", "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"]}
+    {"js_urls": ["https://code.jquery.com/jquery-2.1.4.min.js"], "css_urls": []}
   ]
 }

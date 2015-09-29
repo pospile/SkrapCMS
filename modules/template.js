@@ -3,7 +3,7 @@ var article = require("./database/articles.js");
 var Handlebars = require("handlebars");
 var log = require("./log.js");
 var config = require("./config.js");
-
+var main = require("./database/main.js");
 
 var ReturnStaticPage = function(page, callback) {
 	file.ReadStaticFile(page, function (err, data) {
@@ -43,9 +43,15 @@ var BuildFromData = function (page, options, callback) {
 	}
 	else if (options.type == "index")
 	{
-		article.GetIndexArticles(config.index_article_limit, function(rows){
-			var result = page({article: rows});
-			callback(null, result);
+		if (config.index_article_limit == undefined)
+		{
+			console.log("ERROR: Index article limit is not defined");
+		}
+		article.GetIndexArticles(config.index_article_limit, 0, function(rows){
+			main.BlogName(function (data) {
+				var result = page({article: rows, blog_name: data});
+				callback(null, result);
+			});
 		});
 	}
 	else if (options.type == "user")

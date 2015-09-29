@@ -282,10 +282,16 @@ Desktop slider - both image and content blocks
 
 ---------------------------------------------- */
 @media only screen and (min-width: 768px) {
-  .cd-image-block,
+  .cd-image-block{
+    /* slider style - desktop version only */
+    width: 30%;
+    float: left;
+    height: 100vh;
+    overflow: hidden;
+  }
   .cd-content-block {
     /* slider style - desktop version only */
-    width: 50%;
+    width: 70%;
     float: left;
     height: 100vh;
     overflow: hidden;
@@ -356,7 +362,7 @@ Slider navigation
     position: fixed;
     bottom: 0;
     left: 0;
-    width: 50%;
+    width: 30%;
   }
   .block-navigation::after {
     clear: both;

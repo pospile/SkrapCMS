@@ -6,6 +6,10 @@ var database = require("./database.js");
 var log = require("./log.js");
 var colors = require('colors');
 var modules = require("./modules.js");
+var security = require('./security.js');
+var token = require('./database/token.js');
+var user = require('./database/users.js');
+var article = require('./database/articles.js');
 
 exports.initialize = function (param) {
 	Start(param);
@@ -56,19 +60,19 @@ function Start (param)
 			console.log("  These modules are installed: " + colors.gray("skrap_core/" + modules.modules));
 			console.log("  Modules will not be used on these pages: " + colors.yellow(config.disallowed_modules));
 		}
+
 	});
 
 
 
 	app.get('/', function (req, res) {
 		template.ReturnPage(config.templatePath + "/" + config.theme_index, {"type": "index", "id": "index"}, function (err, data) {
-			console.log("Requeted index directly");
+			console.log("Requested index directly");
 			res.send(data);
 		});
 	});
-	app.get('/article/:number', function (req, res) {
+	app.get(config.article_url + '/:number', function (req, res) {
 		template.ReturnPage(config.templatePath + "/" + config.theme_article, {"type": "article", "id": req.params.number}, function (err, data) {
-			console.log("Requested article: " + req.params.number);
 			res.send(data);
 		});
 	});
@@ -91,6 +95,7 @@ function Start (param)
 			template.ReturnStaticPage(config.templatePath + "/" + req.params.path + ".html", function (err, data) {
 				if(err)
 				{
+					console.log("Requested: " + req.params.path);
 					console.log("404: " + err.code);
 					res.status(404).send(data);
 				}
@@ -108,9 +113,112 @@ function Start (param)
 			});
 		}
 	});
+
+
+
+
+	/*
+			API ROUTES -
+			(SECURE API GATEWAY BELOW)
+	 */
+
+
+	if (config.ExposeAPI)
+	{
+		if (param == "test")
+		{
+			console.log("  Preparing secure API for this server");
+		}
+
+
+		app.get('/api/status', function (req, res) {
+			res.json({"api": "ok"});
+		});
+
+		/*
+
+			USER ACC APIS
+
+		*/
+		app.post('/api/user/create',function(req,res){
+			var username	=	req.body.name;
+			var password	=	req.body.pass;
+			var    email	=	req.body.mail;
+
+			database.CreateUser(username, password, function(data){
+				if (data)
+				{
+					console.log(data);
+					res.json({"done": false, "details": data});
+				}
+				else
+				{
+					res.json({"done": true});
+				}
+			});
+		});
+
+		app.post('/api/user/refresh',function(req,res){
+			var username	=	req.body.name;
+			var token_remote	=	req.body.token;
+
+			security.token_verify(token_remote, username, "my_unique", function(data){
+				res.json(data);
+			});
+		});
+
+		app.post('/api/user/token',function(req,res){
+			var username	=	req.body.name;
+			var password	=	req.body.pass;
+
+			security.SignToken(username, password, "my_unique", function(data){
+				console.log("Unique token generated:" + data);
+				res.json({"token": data});
+			});
+		});
+
+		app.post('/api/user/login',function(req,res){
+			var username	=	req.body.name;
+			var password	=	req.body.pass;
+
+			security.SignToken(username, password, "my_unique", function(data){
+				console.log("Unique token generated:" + data);
+				user.GetUserID(username, function(user){
+					token.AddToken(user.id, data, function(err){
+						res.json({"login": true});
+					});
+				});
+			});
+		});
+
+		app.post('/api/user/list', function (request, response) {
+			var token	=	request.body.token;
+		});
+
+
+		/*
+				CONTENT DELIVERY APIS
+		 */
+
+		app.post('/api/articles', function (req, res) {
+			var max	=	req.body.limit;
+			var offset = req.body.offset;
+
+			article.GetIndexArticles(100, 0, function(data){
+				res.json(data)
+			});
+		});
+
+
+	}
+
+
+
+	/*
+			IF REQUEST IS NOT API OR FILE, DENY IT WITH 404
+	 */
 	app.use(function(req, res, next) {
 		template.ReturnStaticPage(config.templatePath + "/404.html", function (err, data) {
-			console.log("404");
 			res.status(404).send(data);
 		});
 	});
