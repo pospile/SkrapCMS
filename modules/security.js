@@ -8,8 +8,8 @@ var crypto = require('crypto'),
     password = config.ReturnSalt;
 
 function encrypt(text){
-  var cipher = crypto.createCipher(algorithm,password)
-  var crypted = cipher.update(text,'utf8','hex')
+  var cipher = crypto.createCipher(algorithm,password);
+  var crypted = cipher.update(text,'utf8','hex');
   crypted += cipher.final('hex');
   return crypted;
 }
@@ -89,11 +89,12 @@ exports.token_verify = function (token_remote, user, user_unique, callback) {
     token_verify(token_remote, user, user_unique, callback);
 }
 exports.Encrypt = function (data, callback) {
-  callback(encrypt(data));
+    var encrypted = encrypt(data);
+    callback(encrypted);
 }
 
 exports.Decrypt = function (data, callback) {
-  callback(decrypt(data));
+    callback(decrypt(data));
 }
 exports.SignToken = function (user,password,user_unique, callback) {
   sign_token(user,password,user_unique,callback);

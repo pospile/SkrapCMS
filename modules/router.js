@@ -10,6 +10,12 @@ var security = require('./security.js');
 var token = require('./database/token.js');
 var user = require('./database/users.js');
 var article = require('./database/articles.js');
+var dateFormat = require('dateformat');
+var multer  = require('multer');
+var upload = multer({ dest: '././uploads/' });
+var fs = require('fs');
+var push = require('./push.js');
+var Jimp = require("jimp");
 
 exports.initialize = function (param) {
 	Start(param);
@@ -26,6 +32,7 @@ function Start (param)
 
 
 
+	app.use('/api/file', express.static('././uploads/converted'));
 
 	var theme_settings = require("../" + config.templatePath + "/config.json");
 	theme_settings = theme_settings.static_files;
@@ -51,7 +58,9 @@ function Start (param)
 
 
 	var server = app.listen(port, function () {
-		console.log('  DONE: Skrap is running at http://localhost:'.magenta + colors.green(port));
+
+		var now = new Date();
+		console.log('  DONE: Skrap is running at http://localhost:'.magenta + colors.green(port) + "   " + colors.green(dateFormat(now, "dd.mm.yyyy - HH:MM:ss")));
 
 
 		if (param == "test" || param == "files" || param == "pages")
@@ -63,7 +72,11 @@ function Start (param)
 
 	});
 
-
+	app.use(function (req, res, next) {
+		console.log('Time:', Date.now());
+		console.log(req.originalUrl);
+		next();
+	});
 
 	app.get('/', function (req, res) {
 		template.ReturnPage(config.templatePath + "/" + config.theme_index, {"type": "index", "id": "index"}, function (err, data) {
@@ -135,6 +148,10 @@ function Start (param)
 			res.json({"api": "ok"});
 		});
 
+		app.get('/api/disconnect', function (req, res) {
+			res.json({"device": "no"});
+		});
+
 		/*
 
 			USER ACC APIS
@@ -143,7 +160,6 @@ function Start (param)
 		app.post('/api/user/create',function(req,res){
 			var username	=	req.body.name;
 			var password	=	req.body.pass;
-			var    email	=	req.body.mail;
 
 			database.CreateUser(username, password, function(data){
 				if (data)
@@ -185,7 +201,15 @@ function Start (param)
 				console.log("Unique token generated:" + data);
 				user.GetUserID(username, function(user){
 					token.AddToken(user.id, data, function(err){
-						res.json({"login": true});
+						if (err)
+						{
+							console.log(err);
+							res.json({"login": false});
+						}
+						else
+						{
+							res.json({"login": true, "token": data});
+						}
 					});
 				});
 			});
@@ -197,7 +221,7 @@ function Start (param)
 
 
 		/*
-				CONTENT DELIVERY APIS
+				CONTENT DELIVERY APIs
 		 */
 
 		app.post('/api/articles', function (req, res) {
@@ -207,6 +231,60 @@ function Start (param)
 			article.GetIndexArticles(100, 0, function(data){
 				res.json(data)
 			});
+		});
+		app.get('/api/articles', function (req, res) {
+			var max	=	req.body.limit;
+			var offset = req.body.offset;
+
+			article.GetIndexArticles(100, 0, function(data){
+				res.json(data)
+			});
+		});
+
+		/*
+				CONTENT RECEIVING APIs
+		 */
+
+		app.post('/api/create', upload.single('photos'), function (req, res) {
+
+			var data = 	req.body.data;
+			var name = req.body.name;
+			var image = req.file;
+
+			console.log(image);
+
+			var now = new Date();
+
+
+			fs.rename(image.path, image.destination + "/converted/" + image.originalname, function (err) {
+				if (!err){
+					push.sendPush("New post was created at PornGram!", "Post: " + name + " was created." );
+					console.log(image.originalname);
+					var resulted = new Jimp(image.destination + "/converted/" + image.originalname, function (err, result) {
+						console.log(result.bitmap.width + " " + result.bitmap.height);
+						if (result.bitmap.width > 4000){
+							result.resize( 2048, Jimp.AUTO ).write(image.destination + "/converted/" + image.originalname);
+						}
+						else if (result.bitmap.height > 4000)
+						{
+							result.resize( Jimp.AUTO, 2048 ).write(image.destination + "/converted/" + image.originalname);
+						}
+					});
+				}
+				else
+				{
+					res.send(err);
+				}
+			});
+
+
+
+			article.CreateArticle(name, 2, dateFormat(now, "dd.mm.yyyy"),data,"skrap.xyz/api/file/" + image.originalname, function (data) {
+				console.log(data);
+			});
+
+			res.send(now);
+
 		});
 
 

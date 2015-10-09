@@ -2,7 +2,7 @@ var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('./database/article.db');
 var user = require("./users.js");
 
-db.run("CREATE TABLE if not exists `article` (`id`INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,`name`TEXT UNIQUE,`data`TEXT,`index_page` TEXT, `date`TEXT, `author`INTEGER, `author_name`TEXT, `url`TEXT)");
+db.run("CREATE TABLE if not exists `article` (`id`INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,`name`TEXT UNIQUE,`image_url`TEXT UNIQUE, `data`TEXT,`index_page` TEXT, `date`TEXT, `author`INTEGER, `author_name`TEXT, `url`TEXT)");
 
 exports.GetArticle = function (id, callback) {
 	db.get('SELECT * FROM article WHERE url="'+ id +'"', function (err, row) {
@@ -15,7 +15,7 @@ exports.GetArticle = function (id, callback) {
 		else
 		{
 			user.GetUserById(row.author, function(name){
-				var article = {"article": {"id": row.id, "name": row.name, "date": row.date, "author": name.name, "author_id": row.author, "content": row.data}};
+				var article = {"article": {"id": row.id, "name": row.name, "date": row.date, "author": name.name, "author_id": row.author, "content": row.data, "image_url": row.image_url}};
 				console.log(row.name);
 				callback(err, article);
 			});
@@ -24,13 +24,19 @@ exports.GetArticle = function (id, callback) {
 };
 
 exports.GetIndexArticles = function (limit, offset, callback){
-	db.all('SELECT * FROM article LIMIT ' + limit, function (err, rows) {
+	db.all('SELECT * FROM article ORDER BY id DESC LIMIT ' + limit, function (err, rows) {
+		if (err)
+		{
+			rows = "error";
+			console.log("ERROR in database query!!!");
+			return;
+		}
 		callback(rows);
 	});
 };
 
 
-exports.CreateArticle = function (name, author_id, date, data, callback) {
+exports.CreateArticle = function (name, author_id, date, data, image, callback) {
 	if (name != undefined && author_id != undefined && author_id != undefined, data != undefined)
 	{
 		var index_data = data.substring(0, 250);
@@ -39,7 +45,7 @@ exports.CreateArticle = function (name, author_id, date, data, callback) {
 			{
 				console.log(user.name);
 				console.log("Creating article: " + name);
-				db.run("INSERT INTO `article`(`name`,`data`,`index_page`,`date`,`author`,`author_name`) VALUES (?,?,?,?,?,?);", [name,data,index_data,date, author_id, user.name], function (err) {
+				db.run("INSERT INTO `article`(`name`,`data`,`index_page`,`date`,`author`,`author_name`, `image_url`) VALUES (?,?,?,?,?,?,?);", [name,data,index_data,date, author_id, user.name, image], function (err) {
 					if (err){
 						console.log(err);
 						callback(false);
