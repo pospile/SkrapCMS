@@ -1,11 +1,13 @@
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('./database/article.db');
 var user = require("./users.js");
+var likes = require('./likes.js');
 
 db.run("CREATE TABLE if not exists `article` (`id`INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,`name`TEXT UNIQUE,`image_url`TEXT UNIQUE, `data`TEXT,`index_page` TEXT, `date`TEXT, `author`INTEGER, `author_name`TEXT, `url`TEXT)");
 
-exports.GetArticle = function (id, callback) {
-	db.get('SELECT * FROM article WHERE url="'+ id +'"', function (err, row) {
+
+var GetArticle = function (id, callback) {
+	db.get('SELECT * FROM article WHERE id="'+ id +'"', function (err, row) {
 		if (row == undefined)
 		{
 			console.log(err);
@@ -15,15 +17,28 @@ exports.GetArticle = function (id, callback) {
 		else
 		{
 			user.GetUserById(row.author, function(name){
-				var article = {"article": {"id": row.id, "name": row.name, "date": row.date, "author": name.name, "author_id": row.author, "content": row.data, "image_url": row.image_url}};
-				console.log(row.name);
-				callback(err, article);
+				likes.GetLikesForArticle(row.id, function(likes) {
+					var article = {"article": {"id": row.id, "name": row.name, "date": row.date, "author": name.name, "author_id": row.author, "content": row.data, "image_url": row.image_url, "like_count": likes.count}};
+					//console.log(article);
+					callback(err, article);
+				});
 			});
 		}
 	});
-};
+}
 
+exports.GetCount = function (callback) {
+	getCount(function(count){
+		callback(count);
+	})
+}
+
+exports.GetArticle = function (id, callback) {
+	GetArticle(id, callback);
+};
+var articles = [];
 exports.GetIndexArticles = function (limit, offset, callback){
+	/*
 	db.all('SELECT * FROM article ORDER BY id DESC LIMIT ' + limit, function (err, rows) {
 		if (err)
 		{
@@ -33,8 +48,55 @@ exports.GetIndexArticles = function (limit, offset, callback){
 		}
 		callback(rows);
 	});
+	*/
+
+
+	db.all('SELECT * FROM article ORDER BY id DESC', function (err, row) {
+		if (row == undefined)
+		{
+			console.log(err);
+			var article = {"article": {"id": 'null', "name": 'null', "date": 'null', "author": 'null', "author_id": 'null', "content": 'null'}};
+			callback("404", article);
+		}
+		else
+		{
+			var counter = 1;
+			row.forEach(function(r){
+				likes.GetLikesForArticle(r.id, function(likes) {
+					r.like_count = likes.count;
+
+					if (counter == row.length)
+					{
+						callback(row);
+					}
+					else
+					{
+						counter = counter + 1;
+					}
+
+				});
+			});
+			//callback(row);
+			/*
+			user.GetUserById(row.author, function(name){
+				likes.GetLikesForArticle(row.id, function(likes) {
+					var article = {"article": {"id": row.id, "name": row.name, "date": row.date, "author": name.name, "author_id": row.author, "content": row.data, "image_url": row.image_url, "like_count": likes.count}};
+					//console.log(article);
+					callback(err, article);
+				});
+			});
+			*/
+		}
+	});
+
 };
 
+var getCount = function(callback){
+	db.all('SELECT * FROM article ORDER BY id DESC LIMIT 1', function (err, rows) {
+		var count = rows[0].id;
+		callback(count);
+	});
+}
 
 exports.CreateArticle = function (name, author_id, date, data, image, callback) {
 	if (name != undefined && author_id != undefined && author_id != undefined, data != undefined)

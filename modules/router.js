@@ -16,6 +16,8 @@ var upload = multer({ dest: '././uploads/' });
 var fs = require('fs');
 var push = require('./push.js');
 var Jimp = require("jimp");
+var likes = require('./database/likes.js');
+var mime = require('mime');
 
 exports.initialize = function (param) {
 	Start(param);
@@ -72,12 +74,20 @@ function Start (param)
 
 	});
 
+	/*
 	app.use(function (req, res, next) {
 		console.log('Time:', Date.now());
 		console.log(req.originalUrl);
 		next();
 	});
+	*/
 
+
+	/*
+		DEFAULT SYSTEM ROUTES
+	 */
+
+	/*
 	app.get('/', function (req, res) {
 		template.ReturnPage(config.templatePath + "/" + config.theme_index, {"type": "index", "id": "index"}, function (err, data) {
 			console.log("Requested index directly");
@@ -126,7 +136,7 @@ function Start (param)
 			});
 		}
 	});
-
+	*/
 
 
 
@@ -143,6 +153,15 @@ function Start (param)
 			console.log("  Preparing secure API for this server");
 		}
 
+
+		app.get('/api/version', function(req, res) {
+			res.json({"version": 6});
+		});
+
+		app.get('/api/update.apk', function(req, res) {
+			res.setHeader("Content-Type", mime.lookup("/system.apk"));
+			res.sendFile('/home/pi/projects/porngram/system.apk');
+		});
 
 		app.get('/api/status', function (req, res) {
 			res.json({"api": "ok"});
@@ -237,7 +256,13 @@ function Start (param)
 			var offset = req.body.offset;
 
 			article.GetIndexArticles(100, 0, function(data){
-				res.json(data)
+				res.json(data);
+			});
+		});
+
+		app.get('/api/articles/count', function (req, res) {
+			article.GetCount(function(count) {
+				res.send(count);
 			});
 		});
 
@@ -288,7 +313,45 @@ function Start (param)
 		});
 
 
+		app.post('/api/likes', function (req, res) {
+			var id = req.body.id;
+			var token = req.body.token;
+
+			if (token != undefined)
+			{
+				likes.IncreaseLikes(id, function(data){
+					res.json({"done": data});
+				});
+			}
+			else
+			{
+				res.json({"status": "invalid"});
+			}
+		});
+
+		app.get('/api/likes/:id', function (req, res) {
+			var id	=	req.params.id;
+
+			likes.GetLikesForArticle(id, function(data){
+				if (data.id == 'null')
+				{
+					res.json(data);
+				}
+				else
+				{
+					res.json(data);
+				}
+			});
+		});
+
+
+
+
 	}
+
+
+
+
 
 
 
